@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Robert Vu — Cybersecurity</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;0,800;1,400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0a0a0c;
+    --bg-soft:#101015;
+    --panel:#121218;
+    --line:#1f1f29;
+    --line-soft:#191921;
+    --ink:#e8e8ec;
+    --ink-dim:#8a8a96;
+    --ink-faint:#5a5a66;
+    --orange:#FF6B1A;
+    --orange-soft:rgba(255,107,26,.12);
+    --orange-line:rgba(255,107,26,.35);
+    --green:#4ade80;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'JetBrains Mono',monospace;
+    font-size:15px;
+    line-height:1.65;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  /* background atmosphere */
+  body::before{
+    content:"";position:fixed;inset:0;z-index:-2;
+    background:
+      radial-gradient(900px 600px at 78% -8%, rgba(255,107,26,.10), transparent 60%),
+      radial-gradient(700px 500px at -5% 105%, rgba(255,107,26,.05), transparent 55%);
+  }
+  body::after{
+    content:"";position:fixed;inset:0;z-index:-1;opacity:.4;
+    background-image:
+      linear-gradient(var(--line-soft) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line-soft) 1px, transparent 1px);
+    background-size:54px 54px;
+    -webkit-mask-image:radial-gradient(ellipse 100% 80% at 50% 30%, #000 40%, transparent 90%);
+    mask-image:radial-gradient(ellipse 100% 80% at 50% 30%, #000 40%, transparent 90%);
+  }
+  .wrap{max-width:920px;margin:0 auto;padding:0 28px}
+
+  /* reveal animation */
+  .rev{opacity:0;transform:translateY(14px);animation:rise .7s cubic-bezier(.2,.7,.2,1) forwards}
+  @keyframes rise{to{opacity:1;transform:none}}
+
+  /* ---------- hero ---------- */
+  header{padding:120px 0 70px;position:relative}
+  .prompt{color:var(--orange);font-size:13px;letter-spacing:.08em;margin-bottom:22px}
+  .prompt .blink{animation:blink 1.2s steps(2,start) infinite}
+  @keyframes blink{to{opacity:0}}
+  h1{
+    font-size:clamp(44px,9vw,82px);
+    font-weight:800;
+    letter-spacing:-.02em;
+    line-height:1;
+    margin-bottom:20px;
+  }
+  h1 .dot{color:var(--orange)}
+  .tag{font-size:clamp(16px,2.6vw,21px);font-weight:500;color:var(--ink);max-width:640px}
+  .tag .hl{color:var(--orange)}
+  .sub{color:var(--ink-dim);margin-top:14px;max-width:600px;font-size:14px}
+
+  .lia-badge{
+    display:inline-flex;align-items:center;gap:10px;
+    margin-top:30px;padding:9px 16px;
+    border:1px solid var(--orange-line);border-radius:2px;
+    background:var(--orange-soft);font-size:13px;color:var(--ink);
+  }
+  .lia-badge .pulse{width:8px;height:8px;border-radius:50%;background:var(--orange);box-shadow:0 0 0 0 var(--orange);animation:pulse 2s infinite}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(255,107,26,.5)}70%{box-shadow:0 0 0 7px rgba(255,107,26,0)}100%{box-shadow:0 0 0 0 rgba(255,107,26,0)}}
+
+  .links{display:flex;flex-wrap:wrap;gap:10px;margin-top:34px}
+  .links a{
+    display:inline-flex;align-items:center;gap:8px;
+    padding:9px 15px;border:1px solid var(--line);border-radius:2px;
+    color:var(--ink);text-decoration:none;font-size:13px;
+    transition:border-color .2s, color .2s, background .2s, transform .2s;
+  }
+  .links a:hover{border-color:var(--orange-line);color:var(--orange);background:var(--orange-soft);transform:translateY(-2px)}
+
+  /* ---------- sections ---------- */
+  section{padding:46px 0;border-top:1px solid var(--line)}
+  .shead{display:flex;align-items:baseline;gap:14px;margin-bottom:34px}
+  .shead .num{color:var(--orange);font-size:13px;font-weight:700}
+  .shead h2{font-size:13px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--ink-dim)}
+  .shead .rule{flex:1;height:1px;background:var(--line)}
+
+  .profile p{color:var(--ink-dim);max-width:680px;font-size:15px}
+  .profile p .hl{color:var(--ink)}
+
+  /* ---------- projects ---------- */
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .card{
+    display:flex;flex-direction:column;
+    border:1px solid var(--line);border-radius:3px;
+    background:linear-gradient(180deg,var(--panel),var(--bg-soft));
+    padding:22px 22px 20px;text-decoration:none;color:inherit;
+    position:relative;overflow:hidden;
+    transition:border-color .25s, transform .25s;
+  }
+  .card::after{
+    content:"";position:absolute;left:0;top:0;height:2px;width:0;background:var(--orange);
+    transition:width .35s cubic-bezier(.2,.7,.2,1);
+  }
+  .card:hover{border-color:var(--orange-line);transform:translateY(-3px)}
+  .card:hover::after{width:100%}
+  .card .top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:12px}
+  .card h3{font-size:16px;font-weight:700;letter-spacing:-.01em}
+  .card .arrow{color:var(--ink-faint);font-size:15px;transition:color .25s,transform .25s}
+  .card:hover .arrow{color:var(--orange);transform:translate(3px,-3px)}
+  .card .repo{font-size:11.5px;color:var(--ink-faint);margin-bottom:14px;word-break:break-all}
+  .card dl{display:grid;grid-template-columns:auto 1fr;gap:6px 12px;font-size:13px}
+  .card dt{color:var(--orange);font-weight:500}
+  .card dd{color:var(--ink-dim)}
+
+  /* ---------- certs ---------- */
+  .certs{display:flex;flex-direction:column;gap:0}
+  .cert{display:flex;align-items:baseline;gap:16px;padding:13px 0;border-bottom:1px solid var(--line-soft)}
+  .cert:last-child{border-bottom:none}
+  .cert .name{font-weight:500;color:var(--ink);flex:1;min-width:0}
+  .cert .iss{color:var(--ink-faint);font-size:12.5px}
+  .cert .date{color:var(--orange);font-size:12.5px;white-space:nowrap}
+
+  /* ---------- activity / community ---------- */
+  .twocol{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .mini{border:1px solid var(--line);border-radius:3px;padding:20px;background:var(--bg-soft)}
+  .mini .label{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:14px}
+  .stats{display:flex;gap:22px;flex-wrap:wrap;margin-bottom:14px}
+  .stat .v{font-size:24px;font-weight:800;color:var(--orange);line-height:1}
+  .stat .k{font-size:11px;color:var(--ink-dim);margin-top:5px;letter-spacing:.04em}
+  .mini p{font-size:13px;color:var(--ink-dim)}
+  .mini a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--orange-line);transition:color .2s}
+  .mini a:hover{color:var(--orange)}
+
+  /* ---------- LIA ---------- */
+  .lia-block{
+    border:1px solid var(--orange-line);border-radius:3px;
+    background:var(--orange-soft);padding:26px;
+  }
+  .lia-block h3{font-size:17px;margin-bottom:10px}
+  .lia-block p{color:var(--ink-dim);font-size:14px;max-width:620px}
+  .lia-meta{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+  .lia-meta span{font-size:12px;padding:6px 12px;border:1px solid var(--orange-line);border-radius:2px;color:var(--ink)}
+
+  /* ---------- CV ---------- */
+  .cv-row{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:18px}
+  .cv-row p{color:var(--ink-dim);font-size:14px;max-width:430px}
+  .cv-btn{
+    display:inline-flex;align-items:center;gap:10px;
+    padding:13px 22px;border:1px solid var(--orange);border-radius:2px;
+    background:var(--orange);color:#0a0a0c;font-weight:700;font-size:14px;text-decoration:none;
+    transition:transform .2s, box-shadow .2s, background .2s, color .2s;
+  }
+  .cv-btn:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(255,107,26,.28)}
+
+  footer{padding:50px 0 70px;border-top:1px solid var(--line);color:var(--ink-faint);font-size:12.5px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
+  footer a{color:var(--ink-dim);text-decoration:none}
+  footer a:hover{color:var(--orange)}
+
+  @media(max-width:720px){
+    .grid,.twocol{grid-template-columns:1fr}
+    header{padding:90px 0 50px}
+    .cv-row{flex-direction:column;align-items:flex-start}
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <!-- ===== HERO ===== -->
+  <header>
+    <div class="prompt rev">root@rvu:~$ whoami<span class="blink">_</span></div>
+    <h1 class="rev" style="animation-delay:.05s">Robert V<span class="dot">.</span></h1>
+    <p class="tag rev" style="animation-delay:.12s">SOC <span class="hl">analysis and Blue</span> Team operations.</p>
+    <p class="sub rev" style="animation-delay:.18s">IT &amp; cybersecurity student at Frans Schartaus, Stockholm - graduating 2027. I learn by building: every project here is something I set up, broke, defended or documented myself.</p>
+
+    <div class="lia-badge rev" style="animation-delay:.24s"><span class="pulse"></span> Available for LIA 1 placement — weeks 35–43 2026 (Aug–Oct)</div>
+    <div class="lia-badge rev" style="animation-delay:.24s"><span class="pulse"></span> Available for LIA 2 placement — weeks 6–21 2027 (Feb–May)</div>
+
+    <nav class="links rev" style="animation-delay:.3s">
+      <a href="https://github.com/RobertTVu" target="_blank" rel="noopener">GitHub ↗</a>
+      <a href="https://www.linkedin.com/in/roberttamvu/" target="_blank" rel="noopener">LinkedIn ↗</a>
+      <a href="https://tryhackme.com/p/R.VU" target="_blank" rel="noopener">TryHackMe ↗</a>
+      <a href="mailto:vurobert.rv@gmail.com">Email ↗</a>
+    </nav>
+  </header>
+
+  <!-- ===== PROFILE ===== -->
+  <section class="profile">
+    <div class="shead"><span class="num">01</span><h2>Profile</h2><span class="rule"></span></div>
+    <p>After 15+ years in service and hospitality, I moved into security through a DevSecOps program and now study IT &amp; cybersecurity in Stockholm. <span class="hl">I see myself as a generalist</span> - comfortable across networks, cloud, web, Active Directory and detection - with the strongest pull toward SOC and Blue Team work. I keep a home lab running and practice consistently and I care about doing things I can actually explain and defend not just tick off.</p>
+  </section>
+
+  <!-- ===== PROJECTS ===== -->
+  <section>
+    <div class="shead"><span class="num">02</span><h2>Projects</h2><span class="rule"></span></div>
+    <div class="grid">
+
+      <a class="card" href="https://github.com/RobertTVu/aws-cloud-security-architecture" target="_blank" rel="noopener">
+        <div class="top"><h3>Secure AWS architecture</h3><span class="arrow">↗</span></div>
+        <div class="repo">RobertTVu/aws-secure-architecture</div>
+        <dl>
+          <dt>Built</dt><dd>Redesigned a breached SaaS environment as a 3-tier, multi-AZ AWS architecture, deployed in eu-north-1.</dd>
+          <dt>Shows</dt><dd>Cloud security — least privilege, defense in depth, real deploy + written analysis.</dd>
+        </dl>
+      </a>
+
+      <a class="card" href="https://github.com/RobertTVu/ad-attack-detection-lab" target="_blank" rel="noopener">
+        <div class="top"><h3>AD attack &amp; detection</h3><span class="arrow">↗</span></div>
+        <div class="repo">RobertTVu/ad-attack-detection-lab</div>
+        <dl>
+          <dt>Built</dt><dd>A GOAD-Mini Active Directory range, ran a full attack chain, then detected it with Splunk and Defender.</dd>
+          <dt>Shows</dt><dd>The Blue Team loop end to end — attack, log, hunt, detect.</dd>
+        </dl>
+      </a>
+
+      <a class="card" href="https://github.com/RobertTVu/owasp-juice-shop-pentest" target="_blank" rel="noopener">
+        <div class="top"><h3>Juice Shop pentest</h3><span class="arrow">↗</span></div>
+        <div class="repo">RobertTVu/owasp-juice-shop-pentest</div>
+        <dl>
+          <dt>Built</dt><dd>A Dockerised OWASP Juice Shop lab and a full pentest report covering 11 vulnerabilities.</dd>
+          <dt>Shows</dt><dd>Web app testing method - SQLi, XSS, access control - and clear reporting.</dd>
+        </dl>
+      </a>
+
+      <a class="card" href="https://github.com/RobertTVu/infosec-grc-management-review" target="_blank" rel="noopener">
+        <div class="top"><h3>GRC &amp; management review</h3><span class="arrow">↗</span></div>
+        <div class="repo">RobertTVu/infosec-grc-management-review</div>
+        <dl>
+          <dt>Built</dt><dd>An ISO 27001 management-review package, mapped against MSB Metodstöd.</dd>
+          <dt>Shows</dt><dd>Governance, risk &amp; compliance - turning a standard into an actionable review.</dd>
+        </dl>
+      </a>
+
+      <a class="card" href="https://github.com/RobertTVu/applied-security-scripts" target="_blank" rel="noopener">
+        <div class="top"><h3>Security tooling scripts</h3><span class="arrow">↗</span></div>
+        <div class="repo">RobertTVu/applied-security-scripts</div>
+        <dl>
+          <dt>Built</dt><dd>Python/Bash tools - a port scanner, recon helpers, an MD5 utility and an EICAR AV test.</dd>
+          <dt>Shows</dt><dd>Scripting fundamentals applied to recon and detection testing.</dd>
+        </dl>
+      </a>
+
+      <a class="card" href="https://github.com/RobertTVu/network-security" target="_blank" rel="noopener">
+        <div class="top"><h3>Network security lab</h3><span class="arrow">↗</span></div>
+        <div class="repo">RobertTVu/network-security-lab</div>
+        <dl>
+          <dt>Built</dt><dd>A two-site network in Packet Tracer, then ran a build / break / defend cycle on it.</dd>
+          <dt>Shows</dt><dd>Segmentation and hardening - validating defenses by attacking your own design.</dd>
+        </dl>
+      </a>
+
+    </div>
+  </section>
+
+  <!-- ===== CERTIFICATIONS ===== -->
+  <section>
+    <div class="shead"><span class="num">03</span><h2>Certifications</h2><span class="rule"></span></div>
+    <div class="certs">
+      <div class="cert"><span class="name">Certified in Cybersecurity (CC) <span class="iss">· ISC2</span></span><span class="date">Dec 2025</span></div>
+      <div class="cert"><span class="name">Security, Compliance &amp; Identity Fundamentals (SC-900) <span class="iss">· Microsoft</span></span><span class="date">Apr 2026</span></div>
+      <div class="cert"><span class="name">Security Analyst Level 1 (SAL1) <span class="iss">· TryHackMe</span></span><span class="date">Mar 2026</span></div>
+      <div class="cert"><span class="name">Endpoint Security <span class="iss">· Cisco</span></span><span class="date">Mar 2026</span></div>
+      <div class="cert"><span class="name">Networking Basics <span class="iss">· Cisco</span></span><span class="date">Nov 2025</span></div>
+    </div>
+  </section>
+
+  <!-- ===== PRACTICE & COMMUNITY ===== -->
+  <section>
+    <div class="shead"><span class="num">04</span><h2>Practice &amp; Community</h2><span class="rule"></span></div>
+    <div class="twocol">
+      <div class="mini">
+        <div class="label">Hands-on practice</div>
+        <div class="stats">
+          <div class="stat"><div class="v">Top 5%</div><div class="k">global rank</div></div>
+          <div class="stat"><div class="v">323</div><div class="k">rooms</div></div>
+          <div class="stat"><div class="v">228</div><div class="k">day streak</div></div>
+        </div>
+        <p>Consistent hands-on work on <a href="https://tryhackme.com/p/R.VU" target="_blank" rel="noopener">TryHackMe ↗</a> — SOC, Blue Team and cloud paths.</p>
+      </div>
+      <div class="mini">
+        <div class="label">Community</div>
+        <p style="margin-bottom:10px"><strong style="color:var(--ink);font-weight:700">Hack The Box Stockholm</strong> — I attend the monthly meetup, going regularly since Nov 2025.</p>
+        <p>Meeting other infosec people, swapping knowledge and working boxes together in the Stockholm scene.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== LIA ===== -->
+  <section>
+    <div class="shead"><span class="num">05</span><h2>LIA</h2><span class="rule"></span></div>
+    <div class="lia-block">
+      <h3>Looking for an LIA placement</h3>
+      <p>I'm an IT &amp; cybersecurity student looking for a work-integrated learning (LIA) placement where I can contribute to real SOC or Blue Team work and keep learning from people who do this every day.</p>
+      <div class="lia-meta">
+        <span>Weeks 35–43, 2026</span>
+        <span>24 Aug – 25 Oct</span>
+        <span>SOC / Blue Team focus</span>
+        <span>Stockholm</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== CV ===== -->
+  <section>
+    <div class="shead"><span class="num">06</span><h2>CV</h2><span class="rule"></span></div>
+    <div class="cv-row">
+      <p>Full background, experience and skills in one page.</p>
+      <a class="cv-btn" href="cv/Robert-Vu-CV.pdf" target="_blank" rel="noopener">Download CV ↓</a>
+    </div>
+  </section>
+
+  <footer>
+    <span>Robert Vu — Stockholm</span>
+    <span><a href="https://github.com/RobertTVu" target="_blank" rel="noopener">github.com/RobertTVu</a> · <a href="mailto:vurobert.rv@gmail.com">vurobert.rv@gmail.com</a></span>
+  </footer>
+
+</div>
+</body>
+</html>
